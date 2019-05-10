@@ -7,6 +7,7 @@ import getcwd
 import os
 import configparser
 import random
+import psutil,time
 path = getcwd.get_cwd()
 config_path = os.path.join(path, 'Config/config.ini')
 
@@ -142,7 +143,7 @@ class webrequests(unittest.TestCase):
         config.read(config_path,encoding="utf-8-sig")
         if key =='url':
             config_url = config.get(section,key)
-            url = config_url+url
+            url = config_url
             log1.info("请求的url：%s" % url)
             return url
         else:
@@ -243,3 +244,89 @@ class webrequests(unittest.TestCase):
         connection.commit()
         results = cursor.fetchall()
         return  results
+
+    def get_codeList(self,code):
+        """ 将获取到的code验证码拆成元素放到codelist中"""
+        try:
+            codelist = []
+            a = 10 ** (int(len(str(code))) - 1)  # 10的len(code)-1次方
+            for i in range(len(str(code))):
+                if a > 0:
+                    codelist.append(int((code / a) % 10))
+                    a /= 10
+                    print('ss', a)
+                else:
+                    print('运算结束')
+            return codelist
+        except BaseException as e:
+            log1.error('获取失败',exc_info=1)
+
+    def CreatProduct(self,creatr_url,create_post_date):
+        try:
+            session = requests.Session()
+            host = "http://admin.tjs.net"
+            login_url = "http://admin.tjs.net/login.html"
+            login_post_data = {
+                "phone": "18770053344",
+                "password": "aa111111"
+            }
+            session.post(login_url, login_post_data)
+            ress2 = session.post(creatr_url, create_post_date)
+            return ress2
+        except BaseException as e:
+            log1.error('接口访问失败',exc_info=1)
+            raise
+    def examine(self,examine_url,examine_date):
+        '''审核产品函数'''
+        try:
+            session = requests.Session()
+            host = "http://admin.tjs.net"
+            login_url = "http://admin.tjs.net/login.html"
+            login_post_data = {
+                "phone": "18770027573",
+                "password": "aa111111"
+            }
+            session.post(login_url, login_post_data)
+            ress2 = session.post(examine_url, examine_date)
+            print(ress2.content.decode('UTF-8'))
+        except BaseException as e:
+            log1.info('接口访问失败',exc_info=1)
+    def Del(self,name):
+        try:
+            connection = pymysql.connect(host='192.168.113.116', port=3306, user='zjmax', password='zjmax.com', db='num_pro',charset='utf8mb4', cursorclass=pymysql.cursors.DictCursor)
+            cursor = connection.cursor()
+            sql = ("DELETE FROM n_product WHERE NAME = %s"%name)
+            print (sql)
+            cursor.execute(sql)
+            connection.commit()
+        except:
+            print ("Error: fail")
+
+
+    def kill_pids(self,name,count=None):
+        '''杀进程函数
+                name 进程名称
+                count 无作用
+                '''
+        try:
+            if name is None:
+                return "参数不能为空"
+            else:
+                pids = psutil.pids()  # pids 列出所有进程号
+                for pid in pids:  # 遍历进程号
+                    p = psutil.Process(pid)  # 通过pid号实例进程为p以便调用
+                    if p.name() == name:  # p.name()进程名称等于name时，执行cmd命令杀掉进程
+                        print('pid-%s,pname-%s' % (p.pid, p.name()))
+                        cmd = 'taskkill /F /IM {}'.format(name)
+                        os.system(cmd)
+                        print('杀第一次')
+                        time.sleep(4)
+                        cmd2 = 'taskkill /F /IM {}'.format(name)
+                        os.system(cmd2)
+                        print('杀第二次')
+        except BaseException as e:
+            log1.info('进程删除失败', exc_info=1)
+
+
+
+
