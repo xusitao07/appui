@@ -1,15 +1,15 @@
-import TestCase.test_weather
+import TestCase.test_apptest
 import HTMLTestReportCN
 import getcwd
 import os
-import Common.my_email
+# import Common.my_email
 
 import unittest
 if __name__ == "__main__":
     suite = unittest.TestSuite()
-    # suite.addTest(TestCase.test_weather.weather('test_1_login100'))
-    # suite.addTest(TestCase.test_weather.weather('test_16_TransferChecking155'))
-    suite.addTest(TestCase.test_weather.weather('test_1_login'))
+    # suite.addTest(TestCase.test_weather.apptest('test_1_login100'))
+    # suite.addTest(TestCase.test_weather.apptest('test_16_TransferChecking155'))
+    suite.addTest(TestCase.test_apptest.apptest('test_3_BuyPromuji'))
     path = getcwd.get_cwd()
     # testDir = path+'\\TestCase'
     # discover = unittest.defaultTestLoader.discover(testDir, pattern="test_weather*.py")#discover批量运行
