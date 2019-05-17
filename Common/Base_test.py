@@ -11,7 +11,7 @@ import psutil,time
 path = getcwd.get_cwd()
 config_path = os.path.join(path, 'Config/config.ini')
 
-class webrequests(unittest.TestCase):
+class webrequests(object):
 
     def get(self,url,params=None,headers=None,files=None):
         '''封装get方法，return响应码和响应内容'''
@@ -229,7 +229,7 @@ class webrequests(unittest.TestCase):
         print(results)
         for row in results:
             code = row[pram]
-            #print(code)
+            print(code)
         connection.close()
         return code
 
@@ -301,7 +301,18 @@ class webrequests(unittest.TestCase):
             connection.commit()
         except:
             print ("Error: fail")
-
+    def update(self,name,DB):
+        try:
+            connection = pymysql.connect(host='192.168.113.116', port=3306, user='zjmax', password='zjmax.com', db=DB,charset='utf8mb4', cursorclass=pymysql.cursors.DictCursor)
+            cursor = connection.cursor()
+            #随机生成一个产品名称
+            num = '建设' + ''.join(str(random.choice(range(10))) for i in range(6))
+            sql = ("update n_product set name = '{}' where name = '{}'".format(num,name))
+            print (sql)
+            cursor.execute(sql)
+            connection.commit()
+        except:
+            print ("Error: fail")
 
     def kill_pids(self,name,count=None):
         '''杀进程函数
@@ -329,4 +340,5 @@ class webrequests(unittest.TestCase):
 
 
 
-
+if __name__ == "__main__":
+    pass
