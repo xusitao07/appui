@@ -19,7 +19,7 @@ users = my_mail.confige_options('addressed')     #收件人
 addressed_eamils = my_mail.get_addkey(users)  #收件人邮箱
 
 path = getcwd.get_cwd()
-file = os.path.join(path, 'report/钱包接口自动化测试报告.html')
+file = os.path.join(path, 'report/AppUi自动化测试报告.html')
 
 def mail():
     try:
@@ -30,17 +30,17 @@ def mail():
         log1.info('发件人邮箱：%s' % sender)
         message['To']=';'.join(addressed_eamils)    # 括号里的对应收件人邮箱昵称、收件人邮箱账号
         log1.info('收件人邮箱：' + ';'.join(addressed_eamils))
-        message['Subject']=rq + "钱包接口自动化测试报告.html"    # 邮件的主题，也可以说是标题
+        message['Subject']=rq + "AppUi自动化测试报告.html"    # 邮件的主题，也可以说是标题
 
         # 邮件正文内容
-        message.attach(MIMEText('附件为钱包接口自动化测试报告', 'plain', 'utf-8'))
+        message.attach(MIMEText('附件为AppUi自动化测试报告，请下载附件内容查看（邮件不好支持js格式代码预览效果不佳）', 'plain', 'utf-8'))
 
         # 构造附件1，传送当前目录下的 test.txt 文件
         att1 = MIMEText(open(file, 'rb').read(), 'base64', 'utf-8')
         log1.info('读取附件')
         att1["Content-Type"] = 'application/octet-stream'
         # 这里的filename可以任意写，写什么名字，邮件中显示什么名字
-        att1.add_header("Content-Disposition", "attachment", filename=("utf-8", "", "钱包接口自动化测试报告.html"))
+        att1.add_header("Content-Disposition", "attachment", filename=("utf-8", "", "AppUi自动化测试报告.html"))
         # 附件名称非中文时的写法
         # att["Content-Disposition"] = 'attachment; filename="test.html")'
         message.attach(att1)

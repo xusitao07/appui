@@ -8,38 +8,35 @@ from appium import webdriver
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
-import warnings
-from time import sleep
 import re,random
 from threading import Timer
 class apptest(unittest.TestCase):
     @classmethod
     def setUpClass(self):
-        desired_caps = {'platformName': 'Android', # 平台名称
-                        # 'platformVersion': '6.0.1',  # 系统版本号
-                        #'deviceName': '83c4caa7',  # 设备名称。如果是真机，在'设置->关于手机->设备名称'里查看
-                        #'platformVersion': '4.4.2',  # 系统版本号
-                        #'deviceName': '127.0.0.1:62001',  #nox_adb.exe connect 127.0.0.1:62001 设备名称。如果是真机，在'设置->关于手机->设备名称'里查看
-                        # 'platformVersion': '4.4.4',  # 系统版本号
-                        # 'deviceName': '0acb291f',  # 设备名称。如果是真机，在'设置->关于手机->设备名称'里查看
-                        'platformVersion': '5.1.1',
-                        'deviceName': 'Y9K0215204005433',
-                        'appPackage': 'com.shuniuyun.tjs',  # apk的包名
-                        'appActivity': 'com.shuniuyun.tjs.ui.main.activity.StartActivity',  # activity 名称
-                        'automationName' : 'Uiautomator2',
-                        'unicodeKeyboard': 'True',#使用unicode编码方式发送字符串
-                        'resetKeyboard': 'True'#将键盘隐藏起来 http://127.0.0.1:4723/wd/hub
-                        }
-        warnings.simplefilter("ignore",ResourceWarning)#解决运行报错提示：ResourceWarning
+        # desired_caps = {'platformName': 'Android', # 平台名称
+        #                 # 'platformVersion': '6.0.1',  # 系统版本号
+        #                 #'deviceName': '83c4caa7',  # 设备名称。如果是真机，在'设置->关于手机->设备名称'里查看
+        #                 #'platformVersion': '4.4.2',  # 系统版本号
+        #                 #'deviceName': '127.0.0.1:62001',  #nox_adb.exe connect 127.0.0.1:62001 设备名称。如果是真机，在'设置->关于手机->设备名称'里查看
+        #                 # 'platformVersion': '4.4.4',  # 系统版本号
+        #                 # 'deviceName': '0acb291f',  # 设备名称。如果是真机，在'设置->关于手机->设备名称'里查看
+        #                 'platformVersion': '5.1.1',
+        #                 'deviceName': 'Y9K0215204005433',
+        #                 'appPackage': 'com.shuniuyun.tjs',  # apk的包名
+        #                 'appActivity': 'com.shuniuyun.tjs.ui.main.activity.StartActivity',  # activity 名称
+        #                 'automationName' : 'Uiautomator2',
+        #                 'unicodeKeyboard': 'True',#使用unicode编码方式发送字符串
+        #                 'resetKeyboard': 'True'#将键盘隐藏起来 http://127.0.0.1:4723/wd/hub
+        #                 }
         webr = webrequests()
         name = 'find.exe'
         count = 2
-        tim = Timer(5.0,webr.kill_pids,(name,count))# 启动程序7s后 查找进程find.exe并删除两次
+        tim = Timer(7.0,webr.kill_pids,(name,count))# 启动程序7s后 查找进程find.exe并删除两次
         tim.start()#启动
         desired_caps = {
             "platformName": "Android",
-            "platformVersion": "9",#5.1.1
-            "deviceName": "a664ca3",#Y9K0215204005433 "127.0.0.1:21503"
+            "platformVersion": "5.1.1",#5.1.1
+            "deviceName": "127.0.0.1:21503",#Y9K0215204005433
             "appPackage": "com.shuniuyun.tjs",
             "appActivity": "com.shuniuyun.tjs.ui.main.activity.StartActivity",
             "unicodeKeyboard": True,
@@ -49,18 +46,17 @@ class apptest(unittest.TestCase):
         }
 
         self.driver = webdriver.Remote("http://localhost:4723/wd/hub", desired_caps) # 连接Appium
-        sleep(3)
-        TouchAction(self.driver).press(x=925, y=787).move_to(x=60, y=787).release().perform()  # 滑动启始页面
-        sleep(2)
+        time.sleep(5)
+        TouchAction(self.driver).press(x=625, y=787).move_to(x=80, y=787).release().perform()  # 滑动启始页面
+        time.sleep(3)
         self.driver.find_element_by_id("com.shuniuyun.tjs:id/btn_start").click()
     def setUp(self):
         '''登录操作'''
-        # time.sleep(10)
-        self.driver.implicitly_wait("20")
-        self.driver.find_element_by_id("android:id/button1").click()
+        time.sleep(10)
+        self.driver.implicitly_wait("120")
         self.driver.find_element_by_xpath("//android.widget.TextView[@text='账户']").click()
         self.driver.find_element_by_id("com.shuniuyun.tjs:id/btn_login").click()
-        self.driver.find_element_by_id("com.shuniuyun.tjs:id/et_login_phone").send_keys("13546327539")
+        self.driver.find_element_by_id("com.shuniuyun.tjs:id/et_login_phone").send_keys("18770059999")
         self.driver.find_element_by_id("com.shuniuyun.tjs:id/btn_login_ok").click()
         self.driver.find_element_by_id("com.shuniuyun.tjs:id/et_pwd").send_keys("aa111111")
         self.driver.find_element_by_xpath("//android.widget.Button[@text='登录']").click()
@@ -68,71 +64,50 @@ class apptest(unittest.TestCase):
             self.assertTrue(self.driver.find_element_by_id("com.shuniuyun.tjs:id/iv_message").is_displayed())
         except Exception as error:
             raise
-    def tearDown(self):
-        '''退出登录操作'''
-        self.driver.find_element_by_xpath("//android.widget.TextView[@text='账户']").click()
-        self.driver.find_element_by_id("com.shuniuyun.tjs:id/iv_personal_center").click()
-        # TouchAction(self.driver).press(x=57, y=127).move_to(x=87, y=123).release().perform()
-        # TouchAction(self.driver).press(x=552, y=1911).move_to(x=640, y=474).release().perform()
-        # x = self.driver.get_window_size()['width']
-        # y = self.driver.get_window_size()['height']
-        # self.driver.swipe(1/2*x, 1/2*y, 1/2*x, 1/4*y, duration=sleep(2))
-        # print('width{}, height{}'.format(1/2*x, 1/2*y))
-        # self.driver.find_element_by_id("com.shuniuyun.tjs:id/btn_sign_out").click()
-        # log1.info("退出登录")
-        ua_scroll = 'new UiScrollable(new UiSelector().className("android.support.v7.widget.RecyclerView")).scrollIntoView(new UiSelector().text("退出登录"))'
-        self.driver.find_element_by_android_uiautomator(ua_scroll).click()
-        log1.info("退出登录")
-    @classmethod
-    def tearDownClass(self):
-         self.driver.quit()
-         log1.info("关闭drive")
-    def test_1_longin(self):
-        """使用验证码登录"""
-        case_name = '使用验证码登录'
-        try:
-            #先退出
-            self.driver.find_element_by_xpath("//android.widget.TextView[@text='账户']").click()
-            self.driver.find_element_by_id("com.shuniuyun.tjs:id/iv_personal_center").click()
-            ua_scroll = 'new UiScrollable(new UiSelector().className("android.support.v7.widget.RecyclerView")).scrollIntoView(new UiSelector().text("退出登录"))'
-            self.driver.find_element_by_android_uiautomator(ua_scroll).click()
-            log1.info("退出登录")
-            #登录
-            self.driver.find_element_by_xpath("//android.widget.TextView[@text='账户']").click()
-            self.driver.find_element_by_id("com.shuniuyun.tjs:id/btn_login").click()
-            self.driver.find_element_by_id("com.shuniuyun.tjs:id/et_login_phone").send_keys("13546327539")
-            self.driver.find_element_by_id("com.shuniuyun.tjs:id/btn_login_ok").click()
-            self.driver.find_element_by_id("com.shuniuyun.tjs:id/tv_code").click()  # 发送验证码
-            time.sleep(3)
-            tool = webrequests()  # 非静态方法使用需要实例化
-            code = tool.get_identifying_code("SELECT code FROM n_valid a ORDER BY a.add_time DESC LIMIT 1", "code",
-                                             "num_sms")  # 获取登录验证码
-            print(code)
-            # 输入验证码模拟键盘输入
-            for i in tool.get_codeList(int(code)):
-                # print(i)
-                # if i == 0:
-                #     self.driver.press_keycode(7)
-                # else:
-                #     self.driver.press_keycode(i + 7)
-                self.driver.press_keycode(i + 7)
-                time.sleep(1)
-            self.driver.find_element_by_id("com.shuniuyun.tjs:id/btn_next").click()
-            try:
-                self.assertTrue(self.driver.find_element_by_id("com.shuniuyun.tjs:id/iv_message").is_displayed())
-                log1.info("测试通过：%s"%case_name,exc_info=1)
-            except Exception as error:
-                print(u'断言未通过：%s' % error)
-        except BaseException as e:
-            log1.info("测试用例执行出错: %s" % case_name,exc_info=1)
-            raise
-    def keyCode_input(self,par1,):
-        try:
-            for i in webrequests.get_codeList(par1):
-                self.driver.press_keycode(i + 7)
-        except BaseException as err:
-            log1.info("键盘输入报错信息: %s" % err, exc_info=1)
-            raise
+    # def tearDown(self):
+    #     '''退出登录操作'''
+    #     self.driver.find_element_by_xpath("android.widget.TextView[@text='账户']").click()
+    #     self.driver.find_element_by_id("com.shuniuyun.tjs:id/iv_personal_center").click()
+    #     TouchAction(self.driver).press(x=541, y=1413).move_to(x=536, y=696).release().perform()
+    #     self.driver.find_element_by_id("com.shuniuyun.tjs:id/btn_sign_out").click()
+    # @classmethod
+    # def tearDownClass(self):
+    #      time.sleep(5)
+    #      self.driver.quit()
+
+    # def test_1_longin(self):
+    #     """使用验证码登录"""
+    #     case_name = '使用验证码登录'
+    #     try:
+    #         self.driver.find_element_by_xpath("//android.widget.TextView[@text='账户']").click()
+    #         # self.driver.find_element_by_id("com.shuniuyun.tjs:id/fixed_bottom_navigation_title").click()
+    #         self.driver.find_element_by_id("com.shuniuyun.tjs:id/btn_login").click()
+    #         self.driver.find_element_by_id("com.shuniuyun.tjs:id/et_login_phone").send_keys("18770059999")
+    #         self.driver.find_element_by_id("com.shuniuyun.tjs:id/btn_login_ok").click()
+    #         self.driver.find_element_by_id("com.shuniuyun.tjs:id/tv_code").click()  # 发送验证码
+    #         time.sleep(3)
+    #         tool = webrequests()  # 非静态方法使用需要实例化
+    #         code = tool.get_identifying_code("SELECT code FROM n_valid a ORDER BY a.add_time DESC LIMIT 1", "code",
+    #                                          "num_sms")  # 获取登录验证码
+    #         codelist = tool.get_codeList(code)
+    #         # 输入验证码模拟键盘输入
+    #         for i in codelist:
+    #             print(i)
+    #             if i == 0:
+    #                 self.driver.press_keycode(7)
+    #             else:
+    #                 self.driver.press_keycode(i + 7)
+    #             time.sleep(1)
+    #         self.driver.find_element_by_id("com.shuniuyun.tjs:id/btn_next").click()
+    #         try:
+    #             self.assertTrue(self.driver.find_element_by_id("com.shuniuyun.tjs:id/iv_message").is_displayed())
+    #         except Exception as error:
+    #             print(u'断言未通过：%s' % error)
+    #         self.driver.find_element_by_id("com.shuniuyun.tjs:id/iv_personal_center").click()
+    #         self.driver.find_element_by_id("com.shuniuyun.tjs:id/btn_sign_out").click()
+    #     except BaseException as e:
+    #         log1.info("测试用例执行出错: %s" % case_name,exc_info=1)
+    #         raise
     def get_toast(self,text,timeout=30,poll_frequency=0.5):
         """
         driver - 传driver,
@@ -180,7 +155,7 @@ class apptest(unittest.TestCase):
     def creadeNonCollectionpro(self):
         '''创建非募集产品'''
         tool = webrequests()
-        ceradeurl = tool.confige_get('craderurl', 'url')
+        ceradeurl = tool.confige_get('craderurl', 'url',url='')
         creadebody = tool.confige_items('creaderbody')
         resut = tool.CreatProduct(ceradeurl, creadebody)
         print(resut)
@@ -220,380 +195,381 @@ class apptest(unittest.TestCase):
         establishData = tool.confige_items('establishPostDate')
         tool.examine(establishUrl, establishData)
         time.sleep(5)
-    def test_2_BuyProFeimuji(self):
-        """"购买非募集产品"""
-        #后台发布测试产品
-        case_name = '购买非募集产品'
-        try:
-            tool = webrequests()
-            #创建非募集产品
-            self.creadeNonCollectionpro()
-            log1.info('产品创建成功')
-            time.sleep(5)
-            # 审核
-            sql = str("SELECT id FROM n_product WHERE NAME ='app'")
-            self.examine(sql)
-            log1.info('产品审核成功')
-            time.sleep(5)
-            self.driver.find_element_by_xpath("//android.widget.TextView[contains(@text,'理财')]").click()
-            text = self.driver.find_element_by_xpath("//android.widget.TextView[contains(@text,'app')]").get_attribute("text")
-            self.assertEqual(text, "app")
-            self.driver.find_element_by_xpath("//android.widget.TextView[contains(@text,'app')]").click()
-            self.assertEqual(self.driver.find_element_by_id("com.shuniuyun.tjs:id/tv_product_statue").get_attribute("text"),"我要投资")
-            self.driver.find_element_by_id("com.shuniuyun.tjs:id/tv_product_statue").click()  # 点击投资按钮跳转购买页面
-            # 校验起投金额是不是正确
-            self.assertEqual(self.driver.find_element_by_id("com.shuniuyun.tjs:id/et_buy_money").get_attribute("text"),"100001元起投,1元递增")
-            self.driver.find_element_by_id("com.shuniuyun.tjs:id/et_buy_money").send_keys("100000")
-            self.driver.find_element_by_id("com.shuniuyun.tjs:id/btn_buy").click()
-            # 断言toast
-            toast_loc = (By.XPATH, ".//*[contains(@text,'小于产品最低购买金额')]")
-            elm = WebDriverWait(self.driver, 10,0.01).until(EC.presence_of_element_located(toast_loc))
-            print('toast...:',elm.text)
-            self.assertEqual(elm.text, '小于产品最低购买金额')  # 购买金额小于剩余额度
-            self.driver.find_element_by_id("com.shuniuyun.tjs:id/et_buy_money").clear()
-            self.driver.find_element_by_id("com.shuniuyun.tjs:id/et_buy_money").send_keys("5000000")
-            self.driver.find_element_by_id("com.shuniuyun.tjs:id/btn_buy").click()
-            toast = self.get_toast('超过产品最大购买金额')
-            self.assertEqual(toast,'超过产品最大购买金额')  # 购买金额大于剩余额度
-            self.driver.find_element_by_id("com.shuniuyun.tjs:id/et_buy_money").clear()
-            self.driver.find_element_by_id("com.shuniuyun.tjs:id/et_buy_money").send_keys("500000")
-            self.driver.find_element_by_id("com.shuniuyun.tjs:id/btn_buy").click()
-            # 校验跳转是否成功
-            self.assertEqual(self.driver.find_element_by_id("com.shuniuyun.tjs:id/toolbar_title").get_attribute("text"),"投标")
-            time.sleep(4)
-            #切换webview contexts
-            self.switch_webview()
-            text = self.driver.find_element_by_xpath("/html/body/section[1]/div[6]/span[2]").text
-            self.assertEqual(text,'500000.00元')
-            self.driver.find_element_by_id("password").send_keys("aa111111")
-            self.driver.find_element_by_id("acceptBtn").click()
-            self.driver.find_element_by_id("title_content").is_displayed()  # 校验购买成功
-            self.driver.find_element_by_id("acceptBtn").click()
-            time.sleep(4)
-            # 切回native contexts
-            self.switch_native()
+    # def test_2_BuyProFeimuji(self):
+    #     """"购买非募集产品"""
+    #     #后台发布测试产品
+    #     case_name = '购买非募集产品'
+    #     try:
+    #         tool = webrequests()
+    #         #创建非募集产品
+    #         self.creadeNonCollectionpro()
+    #         log1.info('产品创建成功')
+    #         time.sleep(7)
+    #         # 审核
+    #         sql = str("SELECT id FROM n_product WHERE NAME ='app'")
+    #         self.examine(sql)
+    #         log1.info('产品审核成功')
+    #         time.sleep(5)
+    #         self.driver.find_element_by_xpath("//android.widget.TextView[contains(@text,'理财')]").click()
+    #         text = self.driver.find_element_by_xpath("//android.widget.TextView[contains(@text,'app')]").get_attribute("text")
+    #         self.assertEqual(text, "app")
+    #         self.driver.find_element_by_xpath("//android.widget.TextView[contains(@text,'app')]").click()
+    #         self.assertEqual(self.driver.find_element_by_id("com.shuniuyun.tjs:id/tv_product_statue").get_attribute("text"),"我要投资")
+    #         self.driver.find_element_by_id("com.shuniuyun.tjs:id/tv_product_statue").click()  # 点击投资按钮跳转购买页面
+    #         # 校验起投金额是不是正确
+    #         self.assertEqual(self.driver.find_element_by_id("com.shuniuyun.tjs:id/et_buy_money").get_attribute("text"),"100001元起投,1元递增")
+    #         self.driver.find_element_by_id("com.shuniuyun.tjs:id/et_buy_money").send_keys("100000")
+    #         self.driver.find_element_by_id("com.shuniuyun.tjs:id/btn_buy").click()
+    #         # 断言toast
+    #         toast_loc = (By.XPATH, ".//*[contains(@text,'小于产品最低购买金额')]")
+    #         elm = WebDriverWait(self.driver, 10,0.01).until(EC.presence_of_element_located(toast_loc))
+    #         print('toast...:',elm.text)
+    #         self.assertEqual(elm.text, '小于产品最低购买金额')  # 购买金额小于剩余额度
+    #         self.driver.find_element_by_id("com.shuniuyun.tjs:id/et_buy_money").clear()
+    #         self.driver.find_element_by_id("com.shuniuyun.tjs:id/et_buy_money").send_keys("5000000")
+    #         self.driver.find_element_by_id("com.shuniuyun.tjs:id/btn_buy").click()
+    #         toast = self.get_toast('超过产品最大购买金额')
+    #         self.assertEqual(toast,'超过产品最大购买金额')  # 购买金额大于剩余额度
+    #         self.driver.find_element_by_id("com.shuniuyun.tjs:id/et_buy_money").clear()
+    #         self.driver.find_element_by_id("com.shuniuyun.tjs:id/et_buy_money").send_keys("500000")
+    #         self.driver.find_element_by_id("com.shuniuyun.tjs:id/btn_buy").click()
+    #         # 校验跳转是否成功
+    #         self.assertEqual(self.driver.find_element_by_id("com.shuniuyun.tjs:id/toolbar_title").get_attribute("text"),"投标")
+    #         time.sleep(4)
+    #         #切换webview contexts
+    #         self.switch_webview()
+    #         text = self.driver.find_element_by_xpath("/html/body/section[1]/div[6]/span[2]").text
+    #         self.assertEqual(text,'500000.00元')
+    #         self.driver.find_element_by_id("password").send_keys("aa111111")
+    #         self.driver.find_element_by_id("acceptBtn").click()
+    #         self.driver.find_element_by_id("title_content").is_displayed()  # 校验购买成功
+    #         self.driver.find_element_by_id("acceptBtn").click()
+    #         time.sleep(4)
+    #         # 切回native contexts
+    #         self.switch_native()
+    #
+    #         # 成标
+    #         sql = str("SELECT id FROM n_product WHERE NAME ='app'")
+    #         self.establish(sql)
+    #         log1.info('产品成标成功')
+    #         time.sleep(4)
+    #         # 删除产品
+    #         tool.Del("'app'")
+    #         log1.info('产品删除成功')
+    #     except BaseException as e:
+    #         log1.info("测试用例执行出错: %s" % case_name, exc_info=1)
+    #         raise
+    #
+    #     #成标后续可以接入还款的测试脚本
+    # def test_3_BuyPromuji(self):
+    #     """"购买募集产品"""
+    #     #后台发布测试产品
+    #     case_name = '购买募集产品'
+    #     try:
+    #         tool = webrequests()
+    #         #创建非募集产品
+    #         self.creadeCollectionpro()
+    #         log1.info('产品创建成功')
+    #         ## 审核
+    #         sql = str("SELECT id FROM n_product WHERE NAME ='app'")
+    #         self.examine(sql)
+    #         log1.info('产品审核成功')
+    #         self.driver.find_element_by_xpath("//android.widget.TextView[contains(@text,'理财')]").click()
+    #         text = self.driver.find_element_by_xpath("//android.widget.TextView[contains(@text,'app')]").get_attribute("text")
+    #         self.assertEqual(text, "app")
+    #         self.driver.find_element_by_xpath("//android.widget.TextView[contains(@text,'app')]").click()
+    #         self.assertEqual(self.driver.find_element_by_id("com.shuniuyun.tjs:id/tv_product_statue").get_attribute("text"),"我要认购")
+    #         self.driver.find_element_by_id("com.shuniuyun.tjs:id/tv_product_statue").click()  # 点击投资按钮跳转购买页面
+    #         # 校验起投金额是不是正确
+    #         self.assertEqual(self.driver.find_element_by_id("com.shuniuyun.tjs:id/et_buy_money").get_attribute("text"),"100001元起投,1元递增")
+    #         self.driver.find_element_by_id("com.shuniuyun.tjs:id/et_buy_money").send_keys("100000")
+    #         self.driver.find_element_by_id("com.shuniuyun.tjs:id/btn_buy").click()
+    #         # 断言toast
+    #         toast_loc = (By.XPATH, ".//*[contains(@text,'小于产品最低购买金额')]")
+    #         elm = WebDriverWait(self.driver, 10,0.01).until(EC.presence_of_element_located(toast_loc))
+    #         print('toast...:',elm.text)
+    #         self.assertEqual(elm.text, '小于产品最低购买金额')  # 购买金额小于剩余额度
+    #         self.driver.find_element_by_id("com.shuniuyun.tjs:id/et_buy_money").clear()
+    #         self.driver.find_element_by_id("com.shuniuyun.tjs:id/et_buy_money").send_keys("5000000")
+    #         self.driver.find_element_by_id("com.shuniuyun.tjs:id/btn_buy").click()
+    #         toast = self.get_toast('超过产品最大购买金额')
+    #         self.assertEqual(toast,'超过产品最大购买金额')  # 购买金额大于剩余额度
+    #         self.driver.find_element_by_id("com.shuniuyun.tjs:id/et_buy_money").clear()
+    #         self.driver.find_element_by_id("com.shuniuyun.tjs:id/et_buy_money").send_keys("500000")
+    #         self.driver.find_element_by_id("com.shuniuyun.tjs:id/btn_buy").click()
+    #         # 校验跳转是否成功
+    #         self.assertEqual(self.driver.find_element_by_id("com.shuniuyun.tjs:id/toolbar_title").get_attribute("text"),"投标")
+    #         time.sleep(4)
+    #         #切换webview contexts
+    #         self.switch_webview()
+    #         time.sleep(4)
+    #         text = self.driver.find_element_by_xpath("/html/body/section[1]/div[6]/span[2]").text
+    #         self.assertEqual(text,'500000.00元')
+    #         self.driver.find_element_by_id("password").send_keys("aa111111")
+    #         self.driver.find_element_by_id("acceptBtn").click()
+    #         self.driver.find_element_by_id("title_content").is_displayed()  # 校验购买成功
+    #         self.driver.find_element_by_id("acceptBtn").click()
+    #         time.sleep(4)
+    #         # 切回native contexts
+    #         self.switch_native()
+    #         # 成标
+    #         sql = str("SELECT id FROM n_product WHERE NAME ='app'")
+    #         self.establish(sql)
+    #         log1.info('产品成标成功')
+    #         time.sleep(4)
+    #         # 删除产品
+    #         tool.Del("'app'")
+    #         log1.info('产品删除成功')
+    #     except BaseException as e:
+    #         log1.info("测试用例执行出错: %s" % case_name, exc_info=1)
+    #         raise
+    # def test_4_BuyPro_weibao(self):
+    #     """"购买非募集产品"""
+    #     #后台发布测试产品
+    #     case_name = '购买非募集产品'
+    #     try:
+    #         tool = webrequests()
+    #         #创建非募集产品
+    #         self.creadeCollectionpro_weibao()
+    #         log1.info('产品创建成功')
+    #         time.sleep(7)
+    #         # 审核
+    #         sql = str("SELECT id FROM n_product WHERE NAME ='app'")
+    #         self.examine(sql)
+    #         log1.info('产品审核成功')
+    #         time.sleep(5)
+    #         self.driver.find_element_by_xpath("//android.widget.TextView[contains(@text,'理财')]").click()
+    #         text = self.driver.find_element_by_xpath("//android.widget.TextView[contains(@text,'app')]").get_attribute("text")
+    #         self.assertEqual(text, "app")
+    #         self.driver.find_element_by_xpath("//android.widget.TextView[contains(@text,'app')]").click()
+    #         self.assertEqual(self.driver.find_element_by_id("com.shuniuyun.tjs:id/tv_product_statue").get_attribute("text"),"我要认购")
+    #         self.driver.find_element_by_id("com.shuniuyun.tjs:id/tv_product_statue").click()  # 点击投资按钮跳转购买页面
+    #         # 校验起投金额是不是正确
+    #         self.assertEqual(self.driver.find_element_by_id("com.shuniuyun.tjs:id/et_buy_money").get_attribute("text"),"50000.00")
+    #         self.driver.find_element_by_id("com.shuniuyun.tjs:id/btn_buy").click()
+    #         # 校验跳转是否成功
+    #         self.assertEqual(self.driver.find_element_by_id("com.shuniuyun.tjs:id/toolbar_title").get_attribute("text"),"投标")
+    #         time.sleep(4)
+    #         #切换webview contexts
+    #         self.switch_webview()
+    #         time.sleep(4)
+    #         text = self.driver.find_element_by_xpath("/html/body/section[1]/div[6]/span[2]").text
+    #         self.assertEqual(text,'50000.00元')
+    #         self.driver.find_element_by_id("password").send_keys("aa111111")
+    #         self.driver.find_element_by_id("acceptBtn").click()
+    #         self.driver.find_element_by_id("title_content").is_displayed()  # 校验购买成功
+    #         self.driver.find_element_by_id("acceptBtn").click()
+    #         time.sleep(4)
+    #         # 切回native contexts
+    #         self.switch_native()
+    #
+    #         # 成标
+    #         sql = str("SELECT id FROM n_product WHERE NAME ='app'")
+    #         self.establish(sql)
+    #         log1.info('产品成标成功')
+    #         time.sleep(4)
+    #         # 删除产品
+    #         tool.Del("'app'")
+    #         log1.info('产品删除成功')
+    #     except BaseException as e:
+    #         log1.info("测试用例执行出错: %s" % case_name, exc_info=1)
+    #         raise
+    # def test_5_withdraw(self):
+    #     '''提现(执行用例之前先确保提现手续费为2元)'''
+    #     case_name = "提现"
+    #     try:
+    #         self.driver.find_element_by_xpath("//android.widget.TextView[contains(@text,'账户')]").click()
+    #         self.driver.find_element_by_id("com.shuniuyun.tjs:id/iv_assets_eye").click()
+    #         self.driver.find_element_by_id("com.shuniuyun.tjs:id/btn_withdraw").click()
+    #         #查看跳转页面是否正确
+    #         self.assertEqual(self.driver.find_element_by_id("com.shuniuyun.tjs:id/toolbar_title").get_attribute("text"),"提现")
+    #         #获取可提现余额
+    #         text = str(self.driver.find_element_by_id("com.shuniuyun.tjs:id/tv_available_balance").get_attribute("text"))
+    #         bla = re.search('(\d+\.\d+)',text)#匹配text中显示的账户余额
+    #         blance = float(bla.group())
+    #         print(blance)
+    #
+    #         #校验全部按钮使用是否正常
+    #         self.driver.find_element_by_id("com.shuniuyun.tjs:id/tv_all").click()
+    #         self.assertEqual(float(self.driver.find_element_by_id("com.shuniuyun.tjs:id/clearEditText").get_attribute("text")),blance)
+    #         self.driver.find_element_by_id("com.shuniuyun.tjs:id/clearEditText").clear()
+    #         time.sleep(3)
+    #         #随机获取一个3位数的正常提现金额
+    #         num = int(''.join(str(random.choice(range(10))) for i in range(3)))
+    #         print('提现金额：',num)
+    #         #校验提现
+    #         testlist = [0,blance,blance+1,num]
+    #         for i in testlist:
+    #             if i == 0:
+    #                 self.driver.find_element_by_id("com.shuniuyun.tjs:id/clearEditText").send_keys(i)
+    #                 log1.info("i == 0通过")
+    #                 #校验按钮是否可点击，返回false状态正常
+    #                 self.assertEqual(self.driver.find_element_by_id("com.shuniuyun.tjs:id/btn_withdraw").get_attribute("long-clickable"),"false")
+    #             elif i > blance:
+    #                 k = int(i)
+    #                 self.driver.find_element_by_id("com.shuniuyun.tjs:id/clearEditText").clear()
+    #                 self.driver.find_element_by_id("com.shuniuyun.tjs:id/clearEditText").send_keys(k)
+    #                 # 校验按钮是否可点击，返回false状态正常
+    #                 self.assertEqual(self.driver.find_element_by_id("com.shuniuyun.tjs:id/btn_withdraw").get_attribute(
+    #                     "long-clickable"), "false")
+    #                 log1.info("i > blance通过")
+    #             elif i == blance:
+    #                 j = int(i)
+    #                 self.driver.find_element_by_id("com.shuniuyun.tjs:id/clearEditText").clear()
+    #                 self.driver.find_element_by_id("com.shuniuyun.tjs:id/clearEditText").send_keys(j)
+    #                 self.driver.find_element_by_id("com.shuniuyun.tjs:id/btn_withdraw").click()
+    #                 # 校验有手续费的情况下全额提示toast提示是否正常，返回false状态正常
+    #                 toa = self.get_toast("可提现余额应减去手续费")
+    #                 self.assertEqual(toa,"可提现余额应减去手续费")
+    #                 log1.info("i == blance通过")
+    #             elif i == num:
+    #                 # 提现正常校验资金记录和用户余额显示是否正常
+    #                 self.driver.find_element_by_id("com.shuniuyun.tjs:id/clearEditText").clear()
+    #                 self.driver.find_element_by_id("com.shuniuyun.tjs:id/clearEditText").send_keys(i)
+    #                 self.driver.find_element_by_id("com.shuniuyun.tjs:id/btn_withdraw").click()
+    #                 self.switch_webview()
+    #                 #校验页面跳转正确
+    #                 self.driver.find_element_by_xpath("/html/body/section[1]/div[1]/span[2]").is_displayed()
+    #                 #校验手续费和扣除的金额是否正确
+    #                 desc = float(self.driver.find_element_by_xpath("//*[@id='form']/div[4]/input").get_attribute("value"))
+    #                 print("desc",desc)
+    #                 self.driver.find_element_by_id("password").send_keys("aa111111")
+    #                 self.driver.find_element_by_id("acceptBtn").click()
+    #                 self.driver.find_element_by_id("acceptBtn").click()
+    #                 self.switch_native()
+    #                 self.driver.find_element_by_xpath("//android.widget.TextView[@text='首页']").click()
+    #                 self.driver.find_element_by_xpath("//android.widget.TextView[@text='账户']").click()
+    #                 #获取扣除提现金额后的账户余额
+    #                 tex = float(self.driver.find_element_by_id("com.shuniuyun.tjs:id/tv_available_balance").get_attribute("text"))
+    #                 self.assertEqual(blance-tex,desc)#计算提现前账户余额（blance）减掉提现后账户余额（tex）是否等于提现实扣金额（desc）
+    #                 #校验资金明细里面显示是否正确
+    #                 log1.info("i == num通过")
+    #             else:print('异常情况')
+    #         self.driver.find_element_by_xpath("//android.widget.TextView[contains(@text,'资金明细')]").click()
+    #         # 校验跳转页面
+    #         self.assertEqual(self.driver.find_element_by_id("com.shuniuyun.tjs:id/toolbar_title").get_attribute("text"),
+    #                          '资金明细')
+    #         # 获取资金记录并校验
+    #         time.sleep(5)
+    #         te = self.driver.find_element_by_accessibility_id("-{}.00元(手续费2.00元)".format(num+2)).get_attribute("content-desc")
+    #         tes = float(re.search("(\d+\.\d+)",te).group())
+    #         print("tes:",tes)
+    #         self.assertEqual(tes,desc)#资金明细中校验记录金额（tes）是否和提现金额（desc）一致
+    #         # self.assertEqual(desc,te)
+    #         self.driver.find_element_by_xpath("//android.widget.ImageButton[@content-desc='转到上一层级']").click()
+    #         log1.info("提现资金记录校验通过")
+    #     except BaseException as e:
+    #         log1.info("测试用例执行出错：%s"%case_name,exc_info=1)
+    #         raise
 
-            # 成标
-            sql = str("SELECT id FROM n_product WHERE NAME ='app'")
-            self.establish(sql)
-            log1.info('产品成标成功')
-            time.sleep(4)
-            # 删除产品
-            tool.Del("'app'")
-            log1.info('产品删除成功')
-        except BaseException as e:
-            log1.info("测试用例执行出错: %s" % case_name, exc_info=1)
-            raise
-
-        #成标后续可以接入还款的测试脚本
-    def test_3_BuyPromuji(self):
-        """"购买募集产品"""
-        #后台发布测试产品
-        case_name = '购买募集产品'
-        try:
-            tool = webrequests()
-            #创建非募集产品
-            self.creadeCollectionpro()
-            log1.info('产品创建成功')
-            ## 审核
-            sql = str("SELECT id FROM n_product WHERE NAME ='app'")
-            self.examine(sql)
-            log1.info('产品审核成功')
-            self.driver.find_element_by_xpath("//android.widget.TextView[contains(@text,'理财')]").click()
-            text = self.driver.find_element_by_xpath("//android.widget.TextView[contains(@text,'app')]").get_attribute("text")
-            self.assertEqual(text, "app")
-            self.driver.find_element_by_xpath("//android.widget.TextView[contains(@text,'app')]").click()
-            self.assertEqual(self.driver.find_element_by_id("com.shuniuyun.tjs:id/tv_product_statue").get_attribute("text"),"我要认购")
-            self.driver.find_element_by_id("com.shuniuyun.tjs:id/tv_product_statue").click()  # 点击投资按钮跳转购买页面
-            # 校验起投金额是不是正确
-            self.assertEqual(self.driver.find_element_by_id("com.shuniuyun.tjs:id/et_buy_money").get_attribute("text"),"100001元起投,1元递增")
-            self.driver.find_element_by_id("com.shuniuyun.tjs:id/et_buy_money").send_keys("100000")
-            self.driver.find_element_by_id("com.shuniuyun.tjs:id/btn_buy").click()
-            # 断言toast
-            toast_loc = (By.XPATH, ".//*[contains(@text,'小于产品最低购买金额')]")
-            elm = WebDriverWait(self.driver, 10,0.01).until(EC.presence_of_element_located(toast_loc))
-            print('toast...:',elm.text)
-            self.assertEqual(elm.text, '同金社：小于产品最低购买金额')  # 购买金额小于剩余额度
-            self.driver.find_element_by_id("com.shuniuyun.tjs:id/et_buy_money").clear()
-            self.driver.find_element_by_id("com.shuniuyun.tjs:id/et_buy_money").send_keys("5000000")
-            self.driver.find_element_by_id("com.shuniuyun.tjs:id/btn_buy").click()
-            toast = self.get_toast('超过产品最大购买金额')
-            self.assertEqual(toast,'同金社：超过产品最大购买金额')  # 购买金额大于剩余额度
-            self.driver.find_element_by_id("com.shuniuyun.tjs:id/et_buy_money").clear()
-            self.driver.find_element_by_id("com.shuniuyun.tjs:id/et_buy_money").send_keys("500000")
-            self.driver.find_element_by_id("com.shuniuyun.tjs:id/btn_buy").click()
-            # 校验跳转是否成功
-            self.assertEqual(self.driver.find_element_by_id("com.shuniuyun.tjs:id/toolbar_title").get_attribute("text"),"投标")
-            time.sleep(4)
-            #切换webview contexts
-            self.switch_webview()
-            time.sleep(4)
-            text = self.driver.find_element_by_xpath("/html/body/section[1]/div[6]/span[2]").text
-            self.assertEqual(text,'500000.00元')
-            self.driver.find_element_by_id("password").send_keys("aa111111")
-            self.driver.find_element_by_id("acceptBtn").click()
-            self.driver.find_element_by_id("title_content").is_displayed()  # 校验购买成功
-            self.driver.find_element_by_id("acceptBtn").click()
-            time.sleep(4)
-            # 切回native contexts
-            self.switch_native()
-            # 成标
-            sql = str("SELECT id FROM n_product WHERE NAME ='app'")
-            self.establish(sql)
-            log1.info('产品成标成功')
-            time.sleep(4)
-            # 删除产品
-            tool.Del("'app'")
-            log1.info('产品删除成功')
-        except BaseException as e:
-            log1.info("测试用例执行出错: %s" % case_name, exc_info=1)
-            raise
-    def test_4_BuyPro_weibao(self):
-        """"购买非募集产品"""
-        #后台发布测试产品
-        case_name = '购买非募集产品'
-        try:
-            tool = webrequests()
-            #创建非募集产品
-            self.creadeCollectionpro_weibao()
-            log1.info('产品创建成功')
-            time.sleep(7)
-            # 审核
-            sql = str("SELECT id FROM n_product WHERE NAME ='app'")
-            self.examine(sql)
-            log1.info('产品审核成功')
-            time.sleep(5)
-            self.driver.find_element_by_xpath("//android.widget.TextView[contains(@text,'理财')]").click()
-            text = self.driver.find_element_by_xpath("//android.widget.TextView[contains(@text,'app')]").get_attribute("text")
-            self.assertEqual(text, "app")
-            self.driver.find_element_by_xpath("//android.widget.TextView[contains(@text,'app')]").click()
-            self.assertEqual(self.driver.find_element_by_id("com.shuniuyun.tjs:id/tv_product_statue").get_attribute("text"),"我要认购")
-            self.driver.find_element_by_id("com.shuniuyun.tjs:id/tv_product_statue").click()  # 点击投资按钮跳转购买页面
-            # 校验起投金额是不是正确
-            self.assertEqual(self.driver.find_element_by_id("com.shuniuyun.tjs:id/et_buy_money").get_attribute("text"),"50000.00")
-            self.driver.find_element_by_id("com.shuniuyun.tjs:id/btn_buy").click()
-            # 校验跳转是否成功
-            self.assertEqual(self.driver.find_element_by_id("com.shuniuyun.tjs:id/toolbar_title").get_attribute("text"),"投标")
-            time.sleep(4)
-            #切换webview contexts
-            self.switch_webview()
-            time.sleep(4)
-            text = self.driver.find_element_by_xpath("/html/body/section[1]/div[6]/span[2]").text
-            self.assertEqual(text,'50000.00元')
-            self.driver.find_element_by_id("password").send_keys("aa111111")
-            self.driver.find_element_by_id("acceptBtn").click()
-            self.driver.find_element_by_id("title_content").is_displayed()  # 校验购买成功
-            self.driver.find_element_by_id("acceptBtn").click()
-            time.sleep(4)
-            # 切回native contexts
-            self.switch_native()
-
-            # 成标
-            sql = str("SELECT id FROM n_product WHERE NAME ='app'")
-            self.establish(sql)
-            log1.info('产品成标成功')
-            time.sleep(4)
-            # 删除产品
-            tool.Del("'app'")
-            log1.info('产品删除成功')
-        except BaseException as e:
-            log1.info("测试用例执行出错: %s" % case_name, exc_info=1)
-            raise
-    def test_5_withdraw(self):
-        '''提现(执行用例之前先确保提现手续费为2元)'''
-        case_name = "提现"
-        try:
-            self.driver.find_element_by_xpath("//android.widget.TextView[contains(@text,'账户')]").click()
-            self.driver.find_element_by_id("com.shuniuyun.tjs:id/iv_assets_eye").click()
-            self.driver.find_element_by_id("com.shuniuyun.tjs:id/btn_withdraw").click()
-            #查看跳转页面是否正确
-            self.assertEqual(self.driver.find_element_by_id("com.shuniuyun.tjs:id/toolbar_title").get_attribute("text"),"提现")
-            #获取可提现余额
-            text = str(self.driver.find_element_by_id("com.shuniuyun.tjs:id/tv_available_balance").get_attribute("text"))
-            bla = re.search('(\d+\.\d+)',text)#匹配text中显示的账户余额
-            blance = float(bla.group())
-            print(blance)
-
-            #校验全部按钮使用是否正常
-            self.driver.find_element_by_id("com.shuniuyun.tjs:id/tv_all").click()
-            self.assertEqual(float(self.driver.find_element_by_id("com.shuniuyun.tjs:id/clearEditText").get_attribute("text")),blance)
-            self.driver.find_element_by_id("com.shuniuyun.tjs:id/clearEditText").clear()
-            time.sleep(3)
-            #随机获取一个3位数的正常提现金额
-            num = int(''.join(str(random.choice(range(10))) for i in range(3)))
-            print('提现金额：',num)
-            #校验提现
-            testlist = [0,blance,blance+1,num]
-            for i in testlist:
-                if i == 0:
-                    self.driver.find_element_by_id("com.shuniuyun.tjs:id/clearEditText").send_keys(i)
-                    log1.info("i == 0通过")
-                    #校验按钮是否可点击，返回false状态正常
-                    self.assertEqual(self.driver.find_element_by_id("com.shuniuyun.tjs:id/btn_withdraw").get_attribute("long-clickable"),"false")
-                elif i > blance:
-                    k = int(i)
-                    self.driver.find_element_by_id("com.shuniuyun.tjs:id/clearEditText").clear()
-                    self.driver.find_element_by_id("com.shuniuyun.tjs:id/clearEditText").send_keys(k)
-                    # 校验按钮是否可点击，返回false状态正常
-                    self.assertEqual(self.driver.find_element_by_id("com.shuniuyun.tjs:id/btn_withdraw").get_attribute(
-                        "long-clickable"), "false")
-                    log1.info("i > blance通过")
-                elif i == blance:
-                    j = int(i)
-                    self.driver.find_element_by_id("com.shuniuyun.tjs:id/clearEditText").clear()
-                    self.driver.find_element_by_id("com.shuniuyun.tjs:id/clearEditText").send_keys(j)
-                    self.driver.find_element_by_id("com.shuniuyun.tjs:id/btn_withdraw").click()
-                    # 校验有手续费的情况下全额提示toast提示是否正常，返回false状态正常
-                    toa = self.get_toast("可提现余额应减去手续费")
-                    self.assertEqual(toa,"可提现余额应减去手续费")
-                    log1.info("i == blance通过")
-                elif i == num:
-                    # 提现正常校验资金记录和用户余额显示是否正常
-                    self.driver.find_element_by_id("com.shuniuyun.tjs:id/clearEditText").clear()
-                    self.driver.find_element_by_id("com.shuniuyun.tjs:id/clearEditText").send_keys(i)
-                    self.driver.find_element_by_id("com.shuniuyun.tjs:id/btn_withdraw").click()
-                    self.switch_webview()
-                    #校验页面跳转正确
-                    self.driver.find_element_by_xpath("/html/body/section[1]/div[1]/span[2]").is_displayed()
-                    #校验手续费和扣除的金额是否正确
-                    desc = float(self.driver.find_element_by_xpath("//*[@id='form']/div[4]/input").get_attribute("value"))
-                    print("desc",desc)
-                    self.driver.find_element_by_id("password").send_keys("aa111111")
-                    self.driver.find_element_by_id("acceptBtn").click()
-                    self.driver.find_element_by_id("acceptBtn").click()
-                    self.switch_native()
-                    self.driver.find_element_by_xpath("//android.widget.TextView[@text='首页']").click()
-                    self.driver.find_element_by_xpath("//android.widget.TextView[@text='账户']").click()
-                    #获取扣除提现金额后的账户余额
-                    tex = float(self.driver.find_element_by_id("com.shuniuyun.tjs:id/tv_available_balance").get_attribute("text"))
-                    self.assertEqual(blance-tex,desc)#计算提现前账户余额（blance）减掉提现后账户余额（tex）是否等于提现实扣金额（desc）
-                    #校验资金明细里面显示是否正确
-                    log1.info("i == num通过")
-                else:print('异常情况')
-            self.driver.find_element_by_xpath("//android.widget.TextView[contains(@text,'资金明细')]").click()
-            # 校验跳转页面
-            self.assertEqual(self.driver.find_element_by_id("com.shuniuyun.tjs:id/toolbar_title").get_attribute("text"),
-                             '资金明细')
-            # 获取资金记录并校验
-            time.sleep(5)
-            te = self.driver.find_element_by_accessibility_id("-{}.00元(手续费2.00元)".format(num+2)).get_attribute("content-desc")
-            tes = float(re.search("(\d+\.\d+)",te).group())
-            print("tes:",tes)
-            self.assertEqual(tes,desc)#资金明细中校验记录金额（tes）是否和提现金额（desc）一致
-            # self.assertEqual(desc,te)
-            self.driver.find_element_by_xpath("//android.widget.ImageButton[@content-desc='转到上一层级']").click()
-            log1.info("提现资金记录校验通过")
-        except BaseException as e:
-            log1.info("测试用例执行出错：%s"%case_name,exc_info=1)
-            raise
-    def test_6_Recharge(self):
-        '''充值'''
-        case_name = "充值"
-        try:
-            monneylist = [0,0.01,100]#充值测试数据
-            for i in monneylist:
-                if i == 0:
-                    self.driver.find_element_by_xpath("//android.widget.TextView[@text='账户']").click()
-                    self.driver.find_element_by_id("com.shuniuyun.tjs:id/iv_assets_eye").click()  # 调试用跑用例时注释
-                    # 校验跳转页面
-                    self.assertEqual(self.driver.find_element_by_id("com.shuniuyun.tjs:id/toolbar_title").text, "充值")
-                    self.driver.find_element_by_id("com.shuniuyun.tjs:id/clearEditText").send_keys(i)
-                    #输入为0时校验按钮是否置灰
-                    self.assertEqual(self.driver.find_element_by_id("com.shuniuyun.tjs:id/btn_recharge").get_attribute("long-clickable"),"false")
-                    self.driver.find_element_by_accessibility_id("转到上一层级").click()
-
-                elif i == 0.01:
-                    self.driver.find_element_by_xpath("//android.widget.TextView[@text='账户']").click()
-                    self.driver.find_element_by_id("com.shuniuyun.tjs:id/iv_assets_eye").click()  # 调试用跑用例时注释
-                    # 获取未充值前的账户余额用来做校验
-                    AccountBalance = float(
-                        self.driver.find_element_by_id("com.shuniuyun.tjs:id/tv_available_balance").text)
-                    # 校验跳转页面
-                    self.assertEqual(self.driver.find_element_by_id("com.shuniuyun.tjs:id/toolbar_title").text, "充值")
-                    self.driver.find_element_by_id("com.shuniuyun.tjs:id/clearEditText").send_keys(i)
-                    self.driver.find_element_by_id("com.shuniuyun.tjs:id/btn_recharge").click()
-                    # 校验跳转页面
-                    self.assertEqual(self.driver.find_element_by_xpath("/html/body/section[1]/div[3]/span[2]").text,
-                                     "快捷充值")
-                    self.assertEqual(self.driver.find_element_by_xpath("//*[@id='form']/div[2]/span[2]").text,
-                                     "{}元".format(i))
-                    self.driver.find_element_by_id("vcode").send_keys("111111")
-                    self.driver.find_element_by_id("butSend").click()
-                    self.assertEqual(self.get_toast("短信验证码发送成功"), "短信验证码发送成功")
-                    self.driver.find_element_by_id("acceptBtn").click()
-                    time.sleep(3)
-                    self.driver.find_element_by_id("acceptBtn").click()
-                    self.driver.find_element_by_xpath("//android.widget.TextView[@text='首页']").click()
-                    time.sleep(3)
-                    self.driver.find_element_by_xpath("//android.widget.TextView[@text='账户']").click()
-                    #获取充值后的账户余额
-                    RechargeAccountBalance = float(
-                        self.driver.find_element_by_id("com.shuniuyun.tjs:id/tv_available_balance").text)
-                    #校验账户余额金额增加是否正确
-                    self.assertEqual(AccountBalance-RechargeAccountBalance,float(i))
-                    #校验资金明细记录
-                    self.driver.find_element_by_xpath("//android.widget.TextView[contains(@text,'资金明细')]").click()
-                    # 校验跳转页面
-                    self.assertEqual(
-                        self.driver.find_element_by_id("com.shuniuyun.tjs:id/toolbar_title").get_attribute("text"),
-                        '资金明细')
-                    # 获取资金记录并校验
-                    time.sleep(5)
-                    te = self.driver.find_element_by_xpath("//android.view.View[@content-desc='{}元'and@index='6']".format(i)).get_attribute("content-desc")
-                    tes = float(re.search("(\d+\.\d+)", te).group())
-                    print("tes:", tes)
-                    self.assertEqual(tes, i)  # 资金明细中校验记录金额（tes）是否和提现金额（desc）一致
-                    self.driver.find_element_by_xpath("//android.widget.ImageButton[@content-desc='转到上一层级']").click()
-                    log1.info("提现资金记录校验通过")
-                elif i == 100:
-                    self.driver.find_element_by_xpath("//android.widget.TextView[@text='账户']").click()
-                    self.driver.find_element_by_id("com.shuniuyun.tjs:id/iv_assets_eye").click()  # 调试用跑用例时注释
-                    # 获取未充值前的账户余额用来做校验
-                    AccountBalance = float(
-                        self.driver.find_element_by_id("com.shuniuyun.tjs:id/tv_available_balance").text)
-                    # 校验跳转页面
-                    self.assertEqual(self.driver.find_element_by_id("com.shuniuyun.tjs:id/toolbar_title").text, "充值")
-                    self.driver.find_element_by_id("com.shuniuyun.tjs:id/clearEditText").send_keys(i)
-                    self.driver.find_element_by_id("com.shuniuyun.tjs:id/btn_recharge").click()
-                    # 校验跳转页面
-                    self.assertEqual(self.driver.find_element_by_xpath("/html/body/section[1]/div[3]/span[2]").text,
-                                     "快捷充值")
-                    self.assertEqual(self.driver.find_element_by_xpath("//*[@id='form']/div[2]/span[2]").text,
-                                     "{}元".format(i))
-                    self.driver.find_element_by_id("vcode").send_keys("111111")
-                    self.driver.find_element_by_id("butSend").click()
-                    self.assertEqual(self.get_toast("短信验证码发送成功"), "短信验证码发送成功")
-                    self.driver.find_element_by_id("acceptBtn").click()
-                    time.sleep(3)
-                    self.driver.find_element_by_id("acceptBtn").click()
-                    self.driver.find_element_by_xpath("//android.widget.TextView[@text='首页']").click()
-                    time.sleep(3)
-                    self.driver.find_element_by_xpath("//android.widget.TextView[@text='账户']").click()
-                    # 获取充值后的账户余额
-                    RechargeAccountBalance = float(
-                        self.driver.find_element_by_id("com.shuniuyun.tjs:id/tv_available_balance").text)
-                    # 校验账户余额金额增加是否正确
-                    self.assertEqual(AccountBalance - RechargeAccountBalance, i)
-                    # 校验资金明细记录
-                    self.driver.find_element_by_xpath("//android.widget.TextView[contains(@text,'资金明细')]").click()
-                    # 校验跳转页面
-                    self.assertEqual(
-                        self.driver.find_element_by_id("com.shuniuyun.tjs:id/toolbar_title").get_attribute("text"),
-                        '资金明细')
-                    # 获取资金记录并校验
-                    time.sleep(5)
-                    te = self.driver.find_element_by_xpath(
-                        "//android.view.View[@content-desc='{}.00元'and@index='6']".format(i)).get_attribute("content-desc")
-                    tes = float(re.search("(\d+\.\d+)", te).group())
-                    print("tes:", tes)
-                    self.assertEqual(tes, i)  # 资金明细中校验记录金额（tes）是否和提现金额（desc）一致
-                    self.driver.find_element_by_xpath("//android.widget.ImageButton[@content-desc='转到上一层级']").click()
-                    log1.info("提现资金记录校验通过")
-                else:log1.info("测试数据异常")
-            self.driver.find_element_by_id()
-        except BaseException as e:
-            log1.info("测试用例执行出错：%s"%case_name,exc_info=1)
-            raise
+    # def test_6_Recharge(self):
+    #     '''充值'''
+    #     case_name = "充值"
+    #     try:
+    #         monneylist = [0,0.01,100]#充值测试数据
+    #         for i in monneylist:
+    #             if i == 0:
+    #                 self.driver.find_element_by_xpath("//android.widget.TextView[@text='账户']").click()
+    #                 self.driver.find_element_by_id("com.shuniuyun.tjs:id/iv_assets_eye").click()  # 调试用跑用例时注释
+    #                 # 校验跳转页面
+    #                 self.assertEqual(self.driver.find_element_by_id("com.shuniuyun.tjs:id/toolbar_title").text, "充值")
+    #                 self.driver.find_element_by_id("com.shuniuyun.tjs:id/clearEditText").send_keys(i)
+    #                 #输入为0时校验按钮是否置灰
+    #                 self.assertEqual(self.driver.find_element_by_id("com.shuniuyun.tjs:id/btn_recharge").get_attribute("long-clickable"),"false")
+    #                 self.driver.find_element_by_accessibility_id("转到上一层级").click()
+    #
+    #             elif i == 0.01:
+    #                 self.driver.find_element_by_xpath("//android.widget.TextView[@text='账户']").click()
+    #                 self.driver.find_element_by_id("com.shuniuyun.tjs:id/iv_assets_eye").click()  # 调试用跑用例时注释
+    #                 # 获取未充值前的账户余额用来做校验
+    #                 AccountBalance = float(
+    #                     self.driver.find_element_by_id("com.shuniuyun.tjs:id/tv_available_balance").text)
+    #                 # 校验跳转页面
+    #                 self.assertEqual(self.driver.find_element_by_id("com.shuniuyun.tjs:id/toolbar_title").text, "充值")
+    #                 self.driver.find_element_by_id("com.shuniuyun.tjs:id/clearEditText").send_keys(i)
+    #                 self.driver.find_element_by_id("com.shuniuyun.tjs:id/btn_recharge").click()
+    #                 # 校验跳转页面
+    #                 self.assertEqual(self.driver.find_element_by_xpath("/html/body/section[1]/div[3]/span[2]").text,
+    #                                  "快捷充值")
+    #                 self.assertEqual(self.driver.find_element_by_xpath("//*[@id='form']/div[2]/span[2]").text,
+    #                                  "{}元".format(i))
+    #                 self.driver.find_element_by_id("vcode").send_keys("111111")
+    #                 self.driver.find_element_by_id("butSend").click()
+    #                 self.assertEqual(self.get_toast("短信验证码发送成功"), "短信验证码发送成功")
+    #                 self.driver.find_element_by_id("acceptBtn").click()
+    #                 time.sleep(3)
+    #                 self.driver.find_element_by_id("acceptBtn").click()
+    #                 self.driver.find_element_by_xpath("//android.widget.TextView[@text='首页']").click()
+    #                 time.sleep(3)
+    #                 self.driver.find_element_by_xpath("//android.widget.TextView[@text='账户']").click()
+    #                 #获取充值后的账户余额
+    #                 RechargeAccountBalance = float(
+    #                     self.driver.find_element_by_id("com.shuniuyun.tjs:id/tv_available_balance").text)
+    #                 #校验账户余额金额增加是否正确
+    #                 self.assertEqual(AccountBalance-RechargeAccountBalance,float(i))
+    #                 #校验资金明细记录
+    #                 self.driver.find_element_by_xpath("//android.widget.TextView[contains(@text,'资金明细')]").click()
+    #                 # 校验跳转页面
+    #                 self.assertEqual(
+    #                     self.driver.find_element_by_id("com.shuniuyun.tjs:id/toolbar_title").get_attribute("text"),
+    #                     '资金明细')
+    #                 # 获取资金记录并校验
+    #                 time.sleep(5)
+    #                 te = self.driver.find_element_by_xpath("//android.view.View[@content-desc='{}元'and@index='6']".format(i)).get_attribute("content-desc")
+    #                 tes = float(re.search("(\d+\.\d+)", te).group())
+    #                 print("tes:", tes)
+    #                 self.assertEqual(tes, i)  # 资金明细中校验记录金额（tes）是否和提现金额（desc）一致
+    #                 self.driver.find_element_by_xpath("//android.widget.ImageButton[@content-desc='转到上一层级']").click()
+    #                 log1.info("提现资金记录校验通过")
+    #             elif i == 100:
+    #                 self.driver.find_element_by_xpath("//android.widget.TextView[@text='账户']").click()
+    #                 self.driver.find_element_by_id("com.shuniuyun.tjs:id/iv_assets_eye").click()  # 调试用跑用例时注释
+    #                 # 获取未充值前的账户余额用来做校验
+    #                 AccountBalance = float(
+    #                     self.driver.find_element_by_id("com.shuniuyun.tjs:id/tv_available_balance").text)
+    #                 # 校验跳转页面
+    #                 self.assertEqual(self.driver.find_element_by_id("com.shuniuyun.tjs:id/toolbar_title").text, "充值")
+    #                 self.driver.find_element_by_id("com.shuniuyun.tjs:id/clearEditText").send_keys(i)
+    #                 self.driver.find_element_by_id("com.shuniuyun.tjs:id/btn_recharge").click()
+    #                 # 校验跳转页面
+    #                 self.assertEqual(self.driver.find_element_by_xpath("/html/body/section[1]/div[3]/span[2]").text,
+    #                                  "快捷充值")
+    #                 self.assertEqual(self.driver.find_element_by_xpath("//*[@id='form']/div[2]/span[2]").text,
+    #                                  "{}元".format(i))
+    #                 self.driver.find_element_by_id("vcode").send_keys("111111")
+    #                 self.driver.find_element_by_id("butSend").click()
+    #                 self.assertEqual(self.get_toast("短信验证码发送成功"), "短信验证码发送成功")
+    #                 self.driver.find_element_by_id("acceptBtn").click()
+    #                 time.sleep(3)
+    #                 self.driver.find_element_by_id("acceptBtn").click()
+    #                 self.driver.find_element_by_xpath("//android.widget.TextView[@text='首页']").click()
+    #                 time.sleep(3)
+    #                 self.driver.find_element_by_xpath("//android.widget.TextView[@text='账户']").click()
+    #                 # 获取充值后的账户余额
+    #                 RechargeAccountBalance = float(
+    #                     self.driver.find_element_by_id("com.shuniuyun.tjs:id/tv_available_balance").text)
+    #                 # 校验账户余额金额增加是否正确
+    #                 self.assertEqual(AccountBalance - RechargeAccountBalance, i)
+    #                 # 校验资金明细记录
+    #                 self.driver.find_element_by_xpath("//android.widget.TextView[contains(@text,'资金明细')]").click()
+    #                 # 校验跳转页面
+    #                 self.assertEqual(
+    #                     self.driver.find_element_by_id("com.shuniuyun.tjs:id/toolbar_title").get_attribute("text"),
+    #                     '资金明细')
+    #                 # 获取资金记录并校验
+    #                 time.sleep(5)
+    #                 te = self.driver.find_element_by_xpath(
+    #                     "//android.view.View[@content-desc='{}.00元'and@index='6']".format(i)).get_attribute("content-desc")
+    #                 tes = float(re.search("(\d+\.\d+)", te).group())
+    #                 print("tes:", tes)
+    #                 self.assertEqual(tes, i)  # 资金明细中校验记录金额（tes）是否和提现金额（desc）一致
+    #                 self.driver.find_element_by_xpath("//android.widget.ImageButton[@content-desc='转到上一层级']").click()
+    #                 log1.info("提现资金记录校验通过")
+    #             else:log1.info("测试数据异常")
+    #         self.driver.find_element_by_id()
+    #     except BaseException as e:
+    #         log1.info("测试用例执行出错：%s"%case_name,exc_info=1)
+    #         raise
     class loginzhanghuanquan():
         """进入个人中心账户安全"""
         def __init__(self,driver):
@@ -608,82 +584,82 @@ class apptest(unittest.TestCase):
             """进入个人中心"""
             TouchAction(self.driver).press(x=37, y=58).release().perform()
             self.driver.find_element_by_xpath("//android.widget.TextView[@text='账户安全']").click()
-    class ModifyPassword(loginzhanghuanquan):
-        """修改密码"""
-        def Modifyloginpassword(self):
-            """修改登录密码"""
-            self.zhanghuanquan()
-            self.driver.find_element_by_xpath("//android.widget.TextView[@text='修改登录密码']").click()
-            lis = ["aa111111","aa11111"]
-            for i in lis:
-                if i == "aa111111":
-                    self.driver.find_element_by_id("com.shuniuyun.tjs:id/et_old_pwd").send_keys(i)
-                    self.driver.find_element_by_id("com.shuniuyun.tjs:id/et_new_pwd").send_keys("aa111111")
-                    self.driver.find_element_by_id("com.shuniuyun.tjs:id/btn_reset_pwd").click()
-                    # test = apptest()#实例化
-                    self.shiliApptest().assertEqual(self.shiliApptest().get_toast("新旧密码一致"),"新旧密码一致")
-                elif i == "aa11111":
-                    self.driver.find_element_by_id("com.shuniuyun.tjs:id/et_old_pwd").clear()
-                    self.driver.find_element_by_id("com.shuniuyun.tjs:id/et_new_pwd").clear()
-                    self.driver.find_element_by_id("com.shuniuyun.tjs:id/et_old_pwd").send_keys(i)
-                    self.driver.find_element_by_id("com.shuniuyun.tjs:id/et_new_pwd").send_keys("aa111111")
-                    self.driver.find_element_by_id("com.shuniuyun.tjs:id/btn_reset_pwd").click()
-                    self.shiliApptest().assertEqual(self.shiliApptest().get_toast("密码格式不合法"),"密码格式不合法")
-                    self.driver.find_element_by_accessibility_id("转到上一层级").click()
-                    log1.info("测试成功")
-            return self
-        def Modifytransactionpassword(self):
-            """修改交易密码"""
-            self.driver.find_element_by_xpath("//android.widget.TextView[@text='修改交易密码']").click()
-            lis = ["aa11111","aa1111111","aa111111"]
-            for i in lis:
-                if i == "aa11111":
-                    self.driver.find_element_by_accessibility_id("发送验证码").click()
-                    time.sleep(3)
-                    sql = 'SELECT CODE FROM valid ORDER BY dateline DESC LIMIT 1'
-                    identifying = str(self.shiliwebrequests().get_identifying_code(sql, 'CODE', 'num_pay'))
-                    iden = (re.search('(\d)+',identifying)).group()
-                    self.shiliApptest().switch_webview()
-                    ele = self.driver.find_element_by_xpath("/html/body/div[3]/input")
-                    ele.send_keys(iden)
-                    self.driver.find_element_by_xpath("/html/body/div[4]/input").send_keys(i)
-                    self.driver.find_element_by_xpath(
-                        "/html/body/div[6]/input").send_keys(
-                        "aa111111")
-                    self.driver.find_element_by_xpath("//*[@id='acceptBtn']").click()
-                    self.shiliApptest().assertEqual(self.driver.find_element_by_xpath("//*[@id='lz-toast-container']/div/span").text,"请输入8-18位以数字和大小写字母组合")
-                elif i == "aa1111111":
-                    self.driver.find_element_by_xpath(
-                        "/html/body/div[4]/input").clear()
-                    self.driver.find_element_by_xpath(
-                        "/html/body/div[4]/input").send_keys(
-                        i)
-                    self.driver.find_element_by_xpath("//*[@id='acceptBtn']").click()#//*[@id='acceptBtn']
-                    time.sleep(6)
-                    self.shiliApptest().assertEqual(self.driver.find_element_by_xpath("//*[@id='lz-toast-container']/div/span").text,"两次输入的密码不同")
-
-                elif i == "aa111111":
-                    self.driver.find_element_by_xpath(
-                        "/html/body/div[4]/input").clear()
-                    self.driver.find_element_by_xpath(
-                        "/html/body/div[4]/input").send_keys(
-                        i)
-                    self.driver.find_element_by_xpath("//*[@id='acceptBtn']").click()
-                    time.sleep(2)
-                    self.driver.find_element_by_xpath("//*[@id='acceptBtn']").click()
-                    self.shiliApptest().switch_native()
-                    self.driver.find_element_by_xpath("//android.widget.ImageButton[@content-desc='转到上一层级']").click()
-                    time.sleep(3)
-                    self.driver.find_element_by_xpath("//android.widget.ImageButton[@content-desc='转到上一层级']").click()
-                    log1.info("密码修改成功")
-    def test_7_Recharge(self):
-        """修改登录密码,修改交易密码"""
-        case_name = '修改登录密码,修改交易密码'
-        try:
-            self.ModifyPassword(self.driver).Modifyloginpassword().Modifytransactionpassword()
-        except BaseException as e:
-            log1.info("测试用例执行出错：%s"%case_name,exc_info=1)
-            raise
+    # class ModifyPassword(loginzhanghuanquan):
+    #     """修改密码"""
+    #     def Modifyloginpassword(self):
+    #         """修改登录密码"""
+    #         self.zhanghuanquan()
+    #         self.driver.find_element_by_xpath("//android.widget.TextView[@text='修改登录密码']").click()
+    #         lis = ["aa111111","aa11111"]
+    #         for i in lis:
+    #             if i == "aa111111":
+    #                 self.driver.find_element_by_id("com.shuniuyun.tjs:id/et_old_pwd").send_keys(i)
+    #                 self.driver.find_element_by_id("com.shuniuyun.tjs:id/et_new_pwd").send_keys("aa111111")
+    #                 self.driver.find_element_by_id("com.shuniuyun.tjs:id/btn_reset_pwd").click()
+    #                 # test = apptest()#实例化
+    #                 self.shiliApptest().assertEqual(self.shiliApptest().get_toast("新旧密码一致"),"新旧密码一致")
+    #             elif i == "aa11111":
+    #                 self.driver.find_element_by_id("com.shuniuyun.tjs:id/et_old_pwd").clear()
+    #                 self.driver.find_element_by_id("com.shuniuyun.tjs:id/et_new_pwd").clear()
+    #                 self.driver.find_element_by_id("com.shuniuyun.tjs:id/et_old_pwd").send_keys(i)
+    #                 self.driver.find_element_by_id("com.shuniuyun.tjs:id/et_new_pwd").send_keys("aa111111")
+    #                 self.driver.find_element_by_id("com.shuniuyun.tjs:id/btn_reset_pwd").click()
+    #                 self.shiliApptest().assertEqual(self.shiliApptest().get_toast("密码格式不合法"),"密码格式不合法")
+    #                 self.driver.find_element_by_accessibility_id("转到上一层级").click()
+    #                 log1.info("测试成功")
+    #         return self
+    #     def Modifytransactionpassword(self):
+    #         """修改交易密码"""
+    #         self.driver.find_element_by_xpath("//android.widget.TextView[@text='修改交易密码']").click()
+    #         lis = ["aa11111","aa1111111","aa111111"]
+    #         for i in lis:
+    #             if i == "aa11111":
+    #                 self.driver.find_element_by_accessibility_id("发送验证码").click()
+    #                 time.sleep(3)
+    #                 sql = 'SELECT CODE FROM valid ORDER BY dateline DESC LIMIT 1'
+    #                 identifying = str(self.shiliwebrequests().get_identifying_code(sql, 'CODE', 'num_pay'))
+    #                 iden = (re.search('(\d)+',identifying)).group()
+    #                 self.shiliApptest().switch_webview()
+    #                 ele = self.driver.find_element_by_xpath("/html/body/div[3]/input")
+    #                 ele.send_keys(iden)
+    #                 self.driver.find_element_by_xpath("/html/body/div[4]/input").send_keys(i)
+    #                 self.driver.find_element_by_xpath(
+    #                     "/html/body/div[6]/input").send_keys(
+    #                     "aa111111")
+    #                 self.driver.find_element_by_xpath("//*[@id='acceptBtn']").click()
+    #                 self.shiliApptest().assertEqual(self.driver.find_element_by_xpath("//*[@id='lz-toast-container']/div/span").text,"请输入8-18位以数字和大小写字母组合")
+    #             elif i == "aa1111111":
+    #                 self.driver.find_element_by_xpath(
+    #                     "/html/body/div[4]/input").clear()
+    #                 self.driver.find_element_by_xpath(
+    #                     "/html/body/div[4]/input").send_keys(
+    #                     i)
+    #                 self.driver.find_element_by_xpath("//*[@id='acceptBtn']").click()#//*[@id='acceptBtn']
+    #                 time.sleep(6)
+    #                 self.shiliApptest().assertEqual(self.driver.find_element_by_xpath("//*[@id='lz-toast-container']/div/span").text,"两次输入的密码不同")
+    #
+    #             elif i == "aa111111":
+    #                 self.driver.find_element_by_xpath(
+    #                     "/html/body/div[4]/input").clear()
+    #                 self.driver.find_element_by_xpath(
+    #                     "/html/body/div[4]/input").send_keys(
+    #                     i)
+    #                 self.driver.find_element_by_xpath("//*[@id='acceptBtn']").click()
+    #                 time.sleep(2)
+    #                 self.driver.find_element_by_xpath("//*[@id='acceptBtn']").click()
+    #                 self.shiliApptest().switch_native()
+    #                 self.driver.find_element_by_xpath("//android.widget.ImageButton[@content-desc='转到上一层级']").click()
+    #                 time.sleep(3)
+    #                 self.driver.find_element_by_xpath("//android.widget.ImageButton[@content-desc='转到上一层级']").click()
+    #                 log1.info("密码修改成功")
+    # def test_7_Recharge(self):
+    #     """修改登录密码,修改交易密码"""
+    #     case_name = '修改登录密码,修改交易密码'
+    #     try:
+    #         self.ModifyPassword(self.driver).Modifyloginpassword().Modifytransactionpassword()
+    #     except BaseException as e:
+    #         log1.info("测试用例执行出错：%s"%case_name,exc_info=1)
+    #         raise
     class Goumaichengbiao(loginzhanghuanquan):
         def Goumaichengbiao(self):
             """"购买募集产品"""
@@ -701,12 +677,12 @@ class apptest(unittest.TestCase):
             self.shiliApptest().assertEqual(text, "app")
             self.driver.find_element_by_xpath("//android.widget.TextView[contains(@text,'app')]").click()
             self.shiliApptest().assertEqual(
-            self.driver.find_element_by_id("com.shuniuyun.tjs:id/tv_product_statue").get_attribute("text"),
+                self.driver.find_element_by_id("com.shuniuyun.tjs:id/tv_product_statue").get_attribute("text"),
                 "我要认购")
             self.driver.find_element_by_id("com.shuniuyun.tjs:id/tv_product_statue").click()  # 点击投资按钮跳转购买页面
             # 校验起投金额是不是正确
             self.shiliApptest().assertEqual(
-            self.driver.find_element_by_id("com.shuniuyun.tjs:id/et_buy_money").get_attribute("text"),
+                self.driver.find_element_by_id("com.shuniuyun.tjs:id/et_buy_money").get_attribute("text"),
                 "100001元起投,1元递增")
             self.driver.find_element_by_id("com.shuniuyun.tjs:id/et_buy_money").send_keys("100000")
             self.driver.find_element_by_id("com.shuniuyun.tjs:id/btn_buy").click()
@@ -782,8 +758,7 @@ class apptest(unittest.TestCase):
                     self.driver.find_element_by_id("com.shuniuyun.tjs:id/tv_send").click()
                     self.driver.find_element_by_id("com.shuniuyun.tjs:id/toolbar_title").is_displayed()
                     #校验转让是否成功
-                    self.driver.find_element_by_xpath("//android.widget.TextView[@text='转让中']").click()
-                    time.sleep(2)
+                    self.driver.find_element_by_xpath("//android.widget.TextView[contains(@text,'转让中')]").click()
                     TouchAction(self.driver).press(x=218, y=516).move_to(x=218, y=1016).release().perform()
                     time.sleep(2)
                     self.driver.find_element_by_id("com.shuniuyun.tjs:id/tv_item_title").is_displayed()

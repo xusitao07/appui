@@ -1,5 +1,4 @@
 # coding=utf-8
-import configparser
 from Common.Base_test import webrequests
 import requests
 class mytest():
@@ -38,7 +37,7 @@ if __name__ == '__main__':
     url2 = "http://admin.aiyomi.com/server/section/edit_section.html"
     url1 = "http://admin.aiyomi.com/server/section/get_section_by_course_age.html"
     subtitle = ["起床音乐", "亲子对话", "经典名曲", "亲子游戏", "晚安故事"]
-    too = webrequests()
+    too = webrequests()#3333
     for j in range (193,200):#设定新建课程天数区间
         too.config_write('course_age', "age_match", str(j))
         too.config_write('CoreCourse', "age_match", str(j))

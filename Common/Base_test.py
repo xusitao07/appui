@@ -12,7 +12,7 @@ path = getcwd.get_cwd()
 config_path = os.path.join(path, 'Config/config.ini')
 
 class webrequests(object):
-
+    '''tool'''
     def get(self,url,params=None,headers=None,files=None):
         '''封装get方法，return响应码和响应内容'''
         try:
@@ -25,8 +25,6 @@ class webrequests(object):
             return status_code,response_json    # 返回响应码，响应内容
         except BaseException as e:
             log1.error("请求失败！",exc_info=1)
-
-
     def post(self, url, data=None, headers=None,files=None):
         '''封装post请求，return响应码和响应内容'''
         try:
@@ -39,7 +37,6 @@ class webrequests(object):
             return status_code,response_json    # 返回响应码，响应内容
         except BaseException as e:
             log1.error("请求失败！",exc_info=1)
-
     def post_session(self,url,data=None,headers=None,files=None):
         try:
             config = configparser.ConfigParser()
@@ -59,9 +56,6 @@ class webrequests(object):
 
         except BaseException as e:
             log1.error("请求失败", exc_info=1)
-
-
-
     def post_json(self,url,data=None,headers=None):
         '''封装post方法，并用json格式传值，return响应码和响应内容'''
         try:
@@ -75,10 +69,6 @@ class webrequests(object):
             return status_code,response    # 返回响应码，响应内容
         except BaseException as e:
             log1.error("请求失败！",exc_info=1)
-
-
-
-
     def getdict(self,dict1,obj,default=None):
         ''' 遍历嵌套字典，得到想要的value
             dict1所需遍历的字典
@@ -91,7 +81,6 @@ class webrequests(object):
                     re = webrequests.getdict(self,v,obj,default)    # 递归
                     if re is not default:
                         return re
-
     def getdict_hopeval(self,dic, obj):
         ''' 遍历嵌套字典，得到想要的value或key
             dict1所需遍历的字典
@@ -114,7 +103,6 @@ class webrequests(object):
 
         except BaseException as t:
             log1.error("获取失败！", exc_info=1)
-
     def getdict_hopeval_value(self,dic, obj):
         ''' 遍历嵌套字典，得到想要的value或key
             dict1所需遍历的字典
@@ -135,8 +123,6 @@ class webrequests(object):
                         return re
         except BaseException as t:
             log1.error("获取失败！", exc_info=1)
-
-
     def confige_get(self,section,key,url=None):
         '''读取配置文件字段的值并返回'''
         config = configparser.ConfigParser()
@@ -149,8 +135,6 @@ class webrequests(object):
         else:
             config_get = config.get(section,key)
             return  config_get
-
-
     def config_write(self,section,key = None,value = None):
         '''往配置文件写入键值'''
         config = configparser.ConfigParser()
@@ -163,8 +147,6 @@ class webrequests(object):
             config.add_section(section)
             with open(config_path,'w',encoding='utf-8')as f :
                 config.write(f)
-
-
     def config_delete(self,section,key = None):
         '''删除配置文件字段'''
         config = configparser.ConfigParser()
@@ -177,23 +159,18 @@ class webrequests(object):
             config.remove_section(section)
             with open(config_path,'w',encoding='utf-8')as f :
                 config.write(f)
-
-
     def confige_options(self,section):
         '''读取配置文件某section下所有键'''
         config = configparser.ConfigParser()
         config.read(config_path,encoding="utf-8-sig")
         username = config.options(section)
         return username
-
     def confige_items(self,section):
         '''读取配置文件某section下所有key ,value 并转换成字典形式'''
         config = configparser.ConfigParser()
         config.read(config_path,encoding='utf-8')
         data = dict(config.items(section))
         return data
-
-
     def get_addkey(self,user):
         '''遍历获得配置文件收件人email'''
         sum = 0
@@ -204,8 +181,6 @@ class webrequests(object):
                 L.append(emails)
                 sum += 1
         return L
-
-
     def mobile_num(self):
         '''随机生成手机号'''
         try:
@@ -215,7 +190,6 @@ class webrequests(object):
             return var
         except BaseException as e:
             log1.error("生成失败！",exc_info=1)
-
     def get_identifying_code(self,sql,pram,DB):
         '''数据库中获取验证码'''
         connection = pymysql.connect(host='192.168.113.116', port=3306, user='zjmax', password='zjmax.com', db=DB,
@@ -226,13 +200,12 @@ class webrequests(object):
         cursor.execute(Sql)
         connection.commit()
         results = cursor.fetchall()
-        print(results)
+        # print(results)
         for row in results:
             code = row[pram]
-            print(code)
+            # print(code)
         connection.close()
         return code
-
     def get_identifying_code2(self,sql,pram,DB):
         '''数据库中获取验证码'''
         connection = pymysql.connect(host='192.168.113.116', port=3306, user='zjmax', password='zjmax.com', db=DB,
@@ -244,7 +217,6 @@ class webrequests(object):
         connection.commit()
         results = cursor.fetchall()
         return  results
-
     def get_codeList(self,code):
         """ 将获取到的code验证码拆成元素放到codelist中"""
         try:
@@ -254,20 +226,21 @@ class webrequests(object):
                 if a > 0:
                     codelist.append(int((code / a) % 10))
                     a /= 10
-                    print('ss', a)
+                    # print('ss', a)
+
                 else:
                     print('运算结束')
+            # print(codelist)
             return codelist
         except BaseException as e:
             log1.error('获取失败',exc_info=1)
-
     def CreatProduct(self,creatr_url,create_post_date):
         try:
             session = requests.Session()
             host = "http://admin.tjs.net"
             login_url = "http://admin.tjs.net/login.html"
             login_post_data = {
-                "phone": "18770053344",
+                "phone": "15268299107",
                 "password": "aa111111"
             }
             session.post(login_url, login_post_data)
@@ -283,7 +256,7 @@ class webrequests(object):
             host = "http://admin.tjs.net"
             login_url = "http://admin.tjs.net/login.html"
             login_post_data = {
-                "phone": "18770027573",
+                "phone": "15268299107",
                 "password": "aa111111"
             }
             session.post(login_url, login_post_data)
@@ -313,7 +286,6 @@ class webrequests(object):
             connection.commit()
         except:
             print ("Error: fail")
-
     def kill_pids(self,name,count=None):
         '''杀进程函数
                 name 进程名称
@@ -337,8 +309,8 @@ class webrequests(object):
                         print('杀第二次')
         except BaseException as e:
             log1.info('进程删除失败', exc_info=1)
-
-
-
 if __name__ == "__main__":
-    pass
+    t = webrequests()
+    a = int(1234567)
+    for i in t.get_codeList(a):
+        print(i)

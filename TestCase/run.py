@@ -2,27 +2,30 @@ import TestCase.test_apptest
 import HTMLTestReportCN
 import getcwd
 import os
-import Common.my_email
+# import Common.my_email
 
 import unittest
 if __name__ == "__main__":
     suite = unittest.TestSuite()
-    suite.addTest(TestCase.test_apptest.apptest('test_1_longin'))
+    # suite.addTest(TestCase.test_weather.apptest('test_1_login100'))
+    # suite.addTest(TestCase.test_weather.apptest('test_16_TransferChecking155'))
+    suite.addTest(TestCase.test_apptest.apptest('test_3_BuyPromuji'))
     path = getcwd.get_cwd()
     # testDir = path+'\\TestCase'
     # discover = unittest.defaultTestLoader.discover(testDir, pattern="test_weather*.py")#discover批量运行
-    file_path = os.path.join(path,'report/AppUi自动化测试报告')
+    file_path = os.path.join(path,'report/钱包接口自动化测试报告.html')
     fp = open(file_path,'wb')
     runner = HTMLTestReportCN.HTMLTestRunner(
         stream = fp,
-        title = 'AppUi自动化测试报告',
-        description = 'AppUi自动化测试用例',
+        title = '钱包接口自动化测试报告',
+        description = '钱包前后台交互的接口测试用例',
         tester = 'sitao'
 
     )
+    # runner.run(suite)
     runner.run(suite)
     fp.close()
-    Common.my_email.mail()
+    # Common.my_email.mail()
 
     # testDir = 'D:\\TjsApi\\TestCase\\'  # 定义测试用例目录
     # reportDir = "D:\\TjsApi\\Android_report\\"  # 定义报告存放路

@@ -2,7 +2,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-    <title>钱包接口自动化测试报告</title>
+    <title>AppUi自动化测试报告</title>
     <meta name="generator" content="HTMLTestRunner 0.8.2.2"/>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
     <link href="http://libs.baidu.com/bootstrap/3.0.3/css/bootstrap.min.css" rel="stylesheet">
@@ -121,13 +121,13 @@ function html_escape(s) {
 }
 </script>
 <div class='heading'>
-<h1 style="font-family: Microsoft YaHei">钱包接口自动化测试报告</h1>
+<h1 style="font-family: Microsoft YaHei">AppUi自动化测试报告</h1>
 <p class='attribute'><strong>测试人员 : </strong> sitao</p>
-<p class='attribute'><strong>开始时间 : </strong> 2019-04-09 14:23:34</p>
-<p class='attribute'><strong>合计耗时 : </strong> 0:00:00.391022</p>
+<p class='attribute'><strong>开始时间 : </strong> 2019-05-21 09:47:37</p>
+<p class='attribute'><strong>合计耗时 : </strong> 0:01:03.062508</p>
 <p class='attribute'><strong>测试结果 : </strong> 共 1，通过 1，通过率= 100.00%</p>
 
-<p class='description'>钱包前后台交互的接口测试用例</p>
+<p class='description'>AppUi自动化测试用例</p>
 </div>
 
 
@@ -157,7 +157,7 @@ function html_escape(s) {
 </tr>
 
 <tr class='passClass warning'>
-    <td>TestCase.test_weather.weather</td>
+    <td>TestCase.test_apptest.apptest</td>
     <td class="text-center">1</td>
     <td class="text-center">1</td>
     <td class="text-center">0</td>
@@ -166,8 +166,23 @@ function html_escape(s) {
 </tr>
 
 <tr id='pt1_1' class='hiddenRow'>
-    <td class='passCase'><div class='testcase'>test_1_login: 查询天气</div></td>
-    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
+    <td class='passCase'><div class='testcase'>test_1_longin: 使用验证码登录</div></td>
+    <td colspan='5' align='center'>
+    <!--默认收起错误信息 -Findyou
+    <button id='btn_pt1_1' type="button"  class="btn btn-danger btn-xs collapsed" data-toggle="collapse" data-target='#div_pt1_1'>通过</button>
+    <div id='div_pt1_1' class="collapse">  -->
+
+    <!-- 默认展开错误信息 -Findyou -->
+    <button id='btn_pt1_1' type="button"  class="btn btn-danger btn-xs" data-toggle="collapse" data-target='#div_pt1_1'>通过</button>
+    <div id='div_pt1_1' class="collapse in">
+    <pre>
+    
+pt1_1: 400969
+
+
+    </pre>
+    </div>
+    </td>
 </tr>
 
 <tr id='total_row' class="text-center active">
